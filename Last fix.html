@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Farsi Vocabulary Challenge - Chapter 20_Lesson 2</title>
+<style>
+  :root {
+    --color-correct: #4caf50;
+    --color-wrong: #f44336;
+    --color-choice-1: #2196f3;
+    --color-choice-2: #ff9800;
+    --color-choice-3: #9c27b0;
+  }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0; padding: 0;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 20px auto 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 550px;
+  }
+
+  /* New Title */
+  .title {
+    text-align: center;
+    user-select: none;
+    margin-bottom: 6px;
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #555;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+
+  .farsi-word {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    user-select: none;
+  }
+
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  .choice-btn {
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .choice-btn:hover:not(.disabled):not(.correct):not(.wrong) {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+
+  .choice-1 {
+    background-color: var(--color-choice-1);
+  }
+  .choice-2 {
+    background-color: var(--color-choice-2);
+  }
+  .choice-3 {
+    background-color: var(--color-choice-3);
+  }
+
+  .correct {
+    background-color: var(--color-correct) !important;
+    cursor: default;
+  }
+  .wrong {
+    background-color: var(--color-wrong) !important;
+    cursor: default;
+  }
+  .disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .feedback-icon {
+    font-size: 1.6rem;
+    user-select: none;
+    margin-left: 10px;
+  }
+
+  .context-container {
+    padding: 15px 20px;
+    background: #eee;
+    border-radius: 8px;
+    color: #444;
+    font-size: 1.1rem;
+    user-select: none;
+    cursor: pointer;
+    filter: blur(6px);
+    position: relative;
+    transition: filter 0.4s ease;
+    margin-bottom: 10px;
+  }
+
+  .context-container.revealed {
+    filter: none;
+    cursor: default;
+  }
+
+  .context-label {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 10px;
+    user-select: none;
+  }
+
+  #contextSentence {
+    visibility: hidden;
+    user-select: text;
+  }
+
+  /* New play audio button */
+  #playAudioBtn {
+    display: inline-block;
+    margin: 0 20px 20px 20px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 7px;
+    border: none;
+    background-color: #1976d2;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+  #playAudioBtn:hover {
+    background-color: #115293;
+  }
+
+  .nav-bar {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+
+  .nav-button {
+    background-color: #1976d2;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 7px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .nav-button:disabled {
+    background-color: #9e9e9e;
+    cursor: default;
+  }
+
+  .nav-button:hover:not(:disabled) {
+    background-color: #115293;
+  }
+
+  .progress {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  /* Responsive */
+  @media (max-width: 520px) {
+    .container {
+      margin: 10px 15px 40px 15px;
+    }
+    .title {
+      font-size: 1.8rem;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+    .farsi-word {
+      font-size: 2.5rem;
+    }
+    .choice-btn {
+      font-size: 1rem;
+      padding: 12px;
+    }
+    #playAudioBtn {
+      margin: 0 10px 20px 10px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="main" aria-label="Farsi Vocabulary Challenge">
+
+  <!-- New Titles -->
+  <div class="title">Farsi Vocabulary Challenge</div>
+  <div class="subtitle">Chapter 20_Lesson 2</div>
+
+  <div class="farsi-word" id="farsiWord" aria-live="polite" aria-atomic="true">...</div>
+
+  <div class="choices" role="list" aria-label="English choices">
+    <button class="choice-btn choice-1" id="choice0" role="listitem" aria-pressed="false"></button>
+    <button class="choice-btn choice-2" id="choice1" role="listitem" aria-pressed="false"></button>
+    <button class="choice-btn choice-3" id="choice2" role="listitem" aria-pressed="false"></button>
+  </div>
+
+  <div class="context-container" id="contextContainer" tabindex="0" role="button" aria-pressed="false" aria-label="Click to reveal context sentence">
+    <div class="context-label" id="contextLabel">Click to reveal context sentence</div>
+    <div id="contextSentence"></div>
+  </div>
+
+  <!-- New Play Audio Button -->
+  <button id="playAudioBtn" aria-label="Play audio for the current Farsi word">▶ Play Audio</button>
+
+  <div class="nav-bar">
+    <button class="nav-button" id="backBtn" aria-label="Previous word">Back</button>
+    <div class="progress" id="progressText" aria-live="polite" aria-atomic="true"></div>
+    <button class="nav-button" id="nextBtn" aria-label="Next word">Next</button>
+  </div>
+
+</div>
+
+<script>
+  // Vocabulary data with English choices & context sentences
+  const vocabData = [
+    { farsi: "اجرایی شدن", meaning: "to be implemented, to become operational", context: "این پروژه پس از تصویب اجرایی شد", audio:"https://www.dropbox.com/scl/fi/4i2ecapiaty9u9p2js0qk/.wav?rlkey=740kdcal0fq3a7rfzazt6beaf&raw=1" },
+    { farsi: "از سر گیری", meaning: "to resume", context: "جلسات پس از تعطیلات از سر گرفته شدند", audio: "https://www.dropbox.com/scl/fi/7jtp5h4nuacdv1urmmqai/.wav?rlkey=3377ht7hhi3id1ka0xb7ax5x0&st=fp3pz5dl&raw=1 " },
+    { farsi: "انجمن", meaning: "association", context: "انجمن فرهنگی برنامه‌ای برای هفته آینده دارد", audio: "https://www.dropbox.com/scl/fi/67l1vqefw2j588307vdsz/.wav?rlkey=z277dhehz1sjgwlidvgzsa8wx&st=mr6vdlfu&raw=1" },
+    { farsi: "اولیه، ابتدایی", meaning: "initial, primary", context: "مرحله اولیه پروژه با موفقیت انجام شد", audio: "https://www.dropbox.com/scl/fi/kolceidiedfdsmjwigsv9/.wav?rlkey=zbmdsk7qkn5bgh9hjlv1i017d&st=kv9z829p&raw=1" },
+    { farsi: "اهمیت", meaning: "importance", context: "اهمیت آموزش در رشد فردی بسیار بالاست", audio: "https://www.dropbox.com/scl/fi/hhf8upn927ywg3zj72c7j/.wav?rlkey=nlbdi0r2jfhgy0njhnjxvhmou&st=vharu46l&raw=1" },
+    { farsi: "بازگشت، مراجعت", meaning: "return", context: "بازگشت او به کشور با استقبال همراه بود", audio: "https://www.dropbox.com/scl/fi/5wkn0mrxg77wtpbeawhhc/.wav?rlkey=9la7y6r6spvg8d8twy5fmtxi4&st=j6rwbt8u&raw=1" },
+    { farsi: "بخش خصوصی", meaning: "private sector", context: "بخش خصوصی نقش مهمی در اقتصاد دارد", audio: "https://www.dropbox.com/scl/fi/aeramyx5ocw27vc1kxeh3/.wav?rlkey=9fhwr51i2lpgcxtww3419rvjb&st=whtllo1z&raw=1" },
+    { farsi: "به فروش رسیدن، فروخته شدن", meaning: "to be sold", context: "محصول جدید شرکت اپل به سرعت به فروش رسید", audio: "https://www.dropbox.com/scl/fi/q8bkxoqx7ze2mlsbdrytq/.wav?rlkey=gpy29c9449xrmda38v09j1ibx&st=jxkwtt0m&raw=1" },
+    { farsi: "پیش‌فروش", meaning: "presale", context: "پیش‌فروش بلیت‌های کنسرت لیدی گاگا از هفته آینده آغاز می‌شود", audio: "https://www.dropbox.com/scl/fi/en5git9m8hyxienl0br85/.wav?rlkey=ypfz8nukcms03cr8fbp9crltw&st=paurzn0l&raw=1" },
+    { farsi: "تاسیس کردن، بنیانگذاری کردن", meaning: "to establish, to found", context: "او شرکت جدیدی را در زمینه فناوری اطلاعات تاسیس کرد", audio: "https://www.dropbox.com/scl/fi/ocfhhuyi2v3j1s40d872n/.wav?rlkey=02ai9t9x64sogo0gp9atsl5lq&st=be7ipb0l&raw=1" },
+    { farsi: "توافق، موافقت‌نامه", meaning: "agreement", context: "توافق آتش بس و از سرگیری مذاکرات صلح بین دو کشور ایران و عراق امضا شد", audio: "https://www.dropbox.com/scl/fi/1fsa63yvoq2o8l80vzf42/.wav?rlkey=gt6h1z9nux9ti2oqs9025qdeq&st=9q8nemqw&raw=1" },
+    { farsi: "جمهوری", meaning: "republic", context: "جمهوری اسلامی ایران در سال ۱۳۵۷ تشکیل شد", audio: "https://www.dropbox.com/scl/fi/dg0w0us2kk8r9qo5y2aiu/.wav?rlkey=b1u4vx61hrrxyadzpvjy8xxqf&st=neqqq6s0&raw=1" },
+    { farsi: "خروج، خارج شدن", meaning: "exit, leaving, withdrawal", context: "خروج از ساختمان در مواقع اضطراری ضروری است", audio: "https://www.dropbox.com/scl/fi/lm69w85qo5f2nzm3osni8/.wav?rlkey=gc2u8d0b5xylixufca0xb9789&st=hzq2o9u2&raw=1" },
+    { farsi: "خودروسازی", meaning: "automobile manufacturing, car making", context: "صنعت خودروسازی در حال رشد است", audio: "https://www.dropbox.com/scl/fi/g47f13k8wxzq1c04e847a/.wav?rlkey=riq1g979xbijzet9nf8hvuevd&st=vswdwtt9&raw=1" },
+    { farsi: "خودروی سواری", meaning: "sedan", context: "خودروی سواری جدیدی وارد بازار شد", audio: "https://www.dropbox.com/scl/fi/8lcivxadwsbtp8wz8om8b/.wav?rlkey=bj6d0jz5jb45kh5s4tem0n2me&st=972axyhy&raw=1" },
+    { farsi: "در جریان بودن، جریان داشتن", meaning: "to be underway, to be in progress", context: "پروژه ساخت نیروگاه هسته ای در ایران هنوز در جریان است", audio: "https://www.dropbox.com/scl/fi/7py5nissj9s6wfwpb0ezs/.wav?rlkey=k4kmexmz5r34cnmd9qn86gktx&st=zex4zvdj&raw=1" },
+    { farsi: "دستگاه", meaning: "counting unit, machinery device organization", context: "یک دستگاه آپارتمان نوساز با کلیه امکانات رفاهی در شمال شهر تهران به فروش‌ می رسد", audio: "  https://www.dropbox.com/scl/fi/i200z4iyh7vhnvtahgs11/.wav?rlkey=07olxe41s3an9b2cm0anxn1xw&st=z7q5rqac&raw=1" },
+    { farsi: "رفع کردن", meaning: "to lift (sanctions), resolve", context: "در صورت توقف فعالیت های هسته ایران، آمریکا تحریم های علیه ایران را  به تدریج رفع خواهد کرد", audio: "https://www.dropbox.com/scl/fi/jvxozozmbivjrh8bywr44/.wav?rlkey=m0lrw5cnn2elw9tknc3ls903r&st=1wevyjdr&raw=1" },
+    { farsi: "روانه کردن، فرستادن", meaning: "to send, to launch", context: "او نامه‌ای را خطاب به رییس جمهور روانه دفتر ریاست جمهوری کرد", audio: "https://www.dropbox.com/scl/fi/nk6xrp6hqpvrcjtcxxqys/.wav?rlkey=4ebku8deot7k3y5li12v5az0a&st=sss7fnfn&raw=1" },
+    { farsi: "عَرضه کَردَن", meaning: "to offer, to supply, to roll out (a new product)", context: "این شرکت مدل جدیدی از هوش مصنوعی را به بازار عرضه کرد", audio: "https://www.dropbox.com/scl/fi/qzbq0nfaba8q7klbcjvk5/.wav?rlkey=tjchemffhr63sdrbaak6e1ylc&st=ir2g2o0q&raw=1" },
+    { farsi: "قُدرت", meaning: "power, strength, force", context: "قدرت موتور این خودرو بسیار بالاست", audio: "https://www.dropbox.com/scl/fi/zfdubjuodkaxk2wdclr77/.wav?rlkey=91rm05lihmcs7154ajnn5tnzx&st=6eex9nli&raw=1" },
+    { farsi: "قَدَم", meaning: "step, footstep", context: "او با قدم‌های آرام به سمت خانه رفت", audio: "https://www.dropbox.com/scl/fi/4jds3ur5a90x4sdocoaro/.wav?rlkey=sift79qmwhimijp0z9tbhtvub&st=hzzvum39&raw=1" },
+    { farsi: "قِطعِه", meaning: "part(s), piece(s)", context: "این قطعه الکترونیکی برای تعمیر دستگاه لازم است", audio: "https://www.dropbox.com/scl/fi/uqyv2hj6nkm3li45vvvkt/.wav?rlkey=hv1ycydsxdn8myabo4jpl2ev2&st=7mtin5kr&raw=1" },
+    { farsi: "مُدل", meaning: "model", context: "مدل جدید گوشی های تلفن شرکت  سامسونگ بسیار محبوب شده است", audio: "  https://www.dropbox.com/scl/fi/0uhcde6ce3izqotsucvff/.wav?rlkey=nyuevjh07a7beszg8ejkkilh3&st=hga5cjcg&raw=1" },
+    { farsi: "مُوتور", meaning: "engine, motorcycle", context: "موتور هواپیمای این جنگنده ، ساخت کشور چین بسیار قدرتمند است", audio: "https://www.dropbox.com/scl/fi/5203hgeq1wpsupfwuqxtv/.wav?rlkey=9k4tuyrlnvai2048w01i3l53r&st=wx5quv05&raw=1" },
+    { farsi: "سَر هَم کَردَن", meaning: "to assemble", context: "کارگران قطعات خودروها را سر هم کردند", audio: "https://www.dropbox.com/scl/fi/vda3th0fr1olfhhjmyxcb/.wav?rlkey=99vuqn902wjavg0rpzjyfewdc&st=2xl5j2zw&raw=1" },
+    { farsi: "وانت", meaning: "pickup truck", context: "او امروز با ماشین وانت به بازار رفت", audio: "     https://www.dropbox.com/scl/fi/v1t2fa2xdv7otfypojs7f/.wav?rlkey=us99drl3fya80uvkqp1axg8es&st=t4uoy7h7&raw=1" },
+    { farsi: "همچنان", meaning: "still, yet", context: "او همچنان در جستجوی کار مناسب است", audio: "https://www.dropbox.com/scl/fi/53m53ljlg2hikplkshmnk/.wav?rlkey=llnhv65ayx11vb7541l9g66gr&st=2t8x9q3d&raw=1" },
+    { farsi: "هَمکاری", meaning: "cooperation, collaboration", context: "همکاری بین دو کشور چین و روسیه افزایش یافته است", audio: "https://www.dropbox.com/scl/fi/8cdk37syvl484mq5wcd1e/.wav?rlkey=lmpfi0152umkp81wyaqjonttf&st=2ggz4gls&raw=1" },
+  ];
+
+  // Replace empty audio strings with your Dropbox public link URLs for each word if you have audio per word.
+
+  // Example: vocabData[0].audio = "https://www.dropbox.com/s/yourfile.mp3?raw=1";
+
+  // Utility: shuffle array for choices
+  function shuffleArray(arr) {
+    for (let i = arr.length -1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i+1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  // Generate 3 choices per question: 1 correct + 2 random wrongs
+  function getChoices(correctMeaning, allMeanings) {
+    const wrongs = allMeanings.filter(m => m !== correctMeaning);
+    shuffleArray(wrongs);
+    const choices = [correctMeaning, wrongs[0], wrongs[1]];
+    shuffleArray(choices);
+    return choices;
+  }
+
+  // Elements
+  const farsiWordEl = document.getElementById('farsiWord');
+  const choiceButtons = [
+    document.getElementById('choice0'),
+    document.getElementById('choice1'),
+    document.getElementById('choice2'),
+  ];
+  const contextContainer = document.getElementById('contextContainer');
+  const contextLabel = document.getElementById('contextLabel');
+  const contextSentenceEl = document.getElementById('contextSentence');
+  const playAudioBtn = document.getElementById('playAudioBtn');
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const progressText = document.getElementById('progressText');
+
+  let currentIndex = 0;
+  let attempts = 0; // max 2 attempts per word
+  let correctAnswer = "";
+  let choices = [];
+
+  const allMeanings = vocabData.map(v => v.meaning);
+
+  function loadWord(index) {
+    attempts = 0;
+    contextContainer.classList.remove('revealed');
+    contextLabel.style.display = 'block';
+    contextSentenceEl.style.visibility = 'hidden';
+    contextSentenceEl.textContent = '';
+
+    const entry = vocabData[index];
+    farsiWordEl.textContent = entry.farsi;
+
+    choices = getChoices(entry.meaning, allMeanings);
+    correctAnswer = entry.meaning;
+
+    choiceButtons.forEach((btn, i) => {
+      btn.disabled = false;
+      btn.classList.remove('correct', 'wrong', 'disabled');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.innerHTML = choices[i] + ' <span class="feedback-icon" aria-hidden="true"></span>';
+    });
+
+    // Update progress
+    progressText.textContent = `Vocabulary ${index + 1} of ${vocabData.length}`;
+
+    // Navigation buttons enable/disable
+    backBtn.disabled = index === 0;
+    nextBtn.disabled = index === vocabData.length - 1;
+
+    // Reset audio if playing
+    if (window.audio) {
+      window.audio.pause();
+      window.audio.currentTime = 0;
+    }
+  }
+
+  // Handle answer choice clicks
+  function onChoiceClick(e) {
+    if (attempts >= 2) return; // no more interaction
+
+    const btn = e.currentTarget;
+    const chosenText = choices[choiceButtons.indexOf(btn)];
+
+    if (btn.classList.contains('correct') || btn.classList.contains('wrong')) {
+      return; // already answered
+    }
+
+    if (chosenText === correctAnswer) {
+      btn.classList.add('correct');
+      btn.querySelector('.feedback-icon').textContent = '✔';
+      disableChoices();
+    } else {
+      attempts++;
+      btn.classList.add('wrong');
+      btn.querySelector('.feedback-icon').textContent = '✖';
+      if (attempts >= 2) {
+        disableChoices();
+        // Show correct answer
+        const correctBtn = choiceButtons.find(b => {
+          const idx = choiceButtons.indexOf(b);
+          return choices[idx] === correctAnswer;
+        });
+        if (correctBtn) {
+          correctBtn.classList.add('correct');
+          correctBtn.querySelector('.feedback-icon').textContent = '✔';
+        }
+      }
+    }
+    btn.setAttribute('aria-pressed', 'true');
+  }
+
+  // Disable all choice buttons
+  function disableChoices() {
+    choiceButtons.forEach(btn => {
+      btn.disabled = true;
+      btn.classList.add('disabled');
+    });
+  }
+
+  // Reveal context sentence on click
+  contextContainer.addEventListener('click', () => {
+    if (!contextContainer.classList.contains('revealed')) {
+      contextContainer.classList.add('revealed');
+      contextLabel.style.display = 'none';
+      contextSentenceEl.textContent = vocabData[currentIndex].context;
+      contextSentenceEl.style.visibility = 'visible';
+    }
+  });
+
+  // Keyboard accessibility for context container
+  contextContainer.addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && !contextContainer.classList.contains('revealed')) {
+      e.preventDefault();
+      contextContainer.click();
+    }
+  });
+
+  // Play audio button
+  playAudioBtn.addEventListener('click', () => {
+    const audioUrl = vocabData[currentIndex].audio;
+    if (!audioUrl) {
+      alert("No audio available for this word.");
+      return;
+    }
+    if (window.audio) {
+      window.audio.pause();
+      window.audio.currentTime = 0;
+    }
+    window.audio = new Audio(audioUrl);
+    window.audio.play();
+  });
+
+  // Navigation buttons
+  backBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      loadWord(currentIndex);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < vocabData.length - 1) {
+      currentIndex++;
+      loadWord(currentIndex);
+    }
+  });
+
+  // Attach event listeners to choice buttons
+  choiceButtons.forEach(btn => {
+    btn.addEventListener('click', onChoiceClick);
+  });
+
+  // Initial load
+  loadWord(currentIndex);
+
+</script>
+</body>
+</html>
